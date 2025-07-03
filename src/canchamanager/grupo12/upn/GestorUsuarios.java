@@ -1,4 +1,4 @@
-package grupo12;
+package canchamanager.grupo12.upn;
 
 public class GestorUsuarios implements IGestorUsuarios {
     @Override

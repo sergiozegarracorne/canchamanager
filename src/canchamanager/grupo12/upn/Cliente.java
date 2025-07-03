@@ -1,4 +1,4 @@
-package grupo12;
+package canchamanager.grupo12.upn;
 
 public class Cliente {
 	 private String dni;

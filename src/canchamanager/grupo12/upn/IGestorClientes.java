@@ -1,4 +1,4 @@
-package grupo12;
+package canchamanager.grupo12.upn;
 
 public interface IGestorClientes {
 	void registrarCliente(Cliente cliente);
