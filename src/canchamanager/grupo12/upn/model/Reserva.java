@@ -57,6 +57,23 @@ public class Reserva {
         return pagada;
     }
 
+    // Setters
+    public void setCancha(Cancha cancha) {
+        this.cancha = cancha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
+    }
+
     // Setter para el estado de pago
     public void setPagada(boolean pagada) {
         this.pagada = pagada;
