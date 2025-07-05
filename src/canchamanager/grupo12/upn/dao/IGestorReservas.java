@@ -1,6 +1,7 @@
-package canchamanager.grupo12.upn;
+package canchamanager.grupo12.upn.dao;
 
 import canchamanager.grupo12.upn.model.Cancha;
+import canchamanager.grupo12.upn.model.Cliente;
 
 public interface IGestorReservas {
 	  boolean estaDisponible(String fecha, String hora);

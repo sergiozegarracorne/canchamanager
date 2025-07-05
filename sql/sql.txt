@@ -1,0 +1,10 @@
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    nombre_completo VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol ENUM('ADMIN', 'USUARIO') DEFAULT 'USUARIO',
+    fecha_alta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_baja DATETIME NULL,
+    UNIQUE (username)
+);

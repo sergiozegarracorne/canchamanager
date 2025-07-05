@@ -2,7 +2,9 @@ package canchamanager.grupo12.upn;
 
 import java.util.ArrayList;
 
+import canchamanager.grupo12.upn.dao.IGestorReservas;
 import canchamanager.grupo12.upn.model.Cancha;
+import canchamanager.grupo12.upn.model.Cliente;
 import canchamanager.grupo12.upn.model.Reserva;
 
 public class SistemaReservas implements IGestorReservas {

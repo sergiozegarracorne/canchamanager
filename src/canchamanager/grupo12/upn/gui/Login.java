@@ -1,4 +1,4 @@
-package GUI;
+package canchamanager.grupo12.upn.gui;
 
 import java.awt.EventQueue;
 import javax.swing.*;
