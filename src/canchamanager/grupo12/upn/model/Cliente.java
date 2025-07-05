@@ -22,6 +22,16 @@ public class Cliente {
         this.fechaRegistro = LocalDateTime.now(); // Asigna la fecha actual
     }
     
+    public Cliente(int id, String nombre, String telefono, String email, String dni, boolean frecuente) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.email = email;
+        this.dni = dni;
+        this.frecuente = frecuente;
+      
+    }
+    
     public Cliente(int id, String nombre, String telefono, String email, String dni, boolean frecuente, LocalDateTime fechaRegistro) {
         this.id = id;
         this.nombre = nombre;

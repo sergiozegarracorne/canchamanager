@@ -32,7 +32,7 @@ public class GestionUsuariosFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        // ✅ Panel superior (formulario)
+    
         JPanel panelFormulario = new JPanel(new GridLayout(5, 2, 10, 10));
         panelFormulario.setBorder(BorderFactory.createTitledBorder("Registrar / Editar Usuario"));
 
@@ -62,7 +62,7 @@ public class GestionUsuariosFrame extends JFrame {
 
         getContentPane().add(panelFormulario, BorderLayout.NORTH);
 
-        // ✅ Tabla de usuarios
+        
         String[] columnas = {"ID", "Username", "Nombre", "Rol", "Estado", "Acciones"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             /**
@@ -80,7 +80,7 @@ public class GestionUsuariosFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tablaUsuarios);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        // ✅ Cargar datos
+   
         cargarUsuarios();
 
         // ✅ Botón derecho para editar/dar de baja/activar

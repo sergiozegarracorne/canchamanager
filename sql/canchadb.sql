@@ -45,6 +45,8 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`id`, `nombre`, `telefono`, `email`, `dni`, `frecuente`, `fecha_registro`) VALUES
 (1, 'sergio', '5251234', 'asdssdds@ssdds.com', '42451791', 0, '2025-07-05 02:22:31'),
+(2, 'FRANK', '9985251234', 'FRANKds@ssdds.com', '42451791', 0, '2025-07-05 03:22:31'),
+(3, 'BARUC', '9985251234', 'FRANKds@ssdds.com', '42451791', 0, '2025-07-06 04:22:31'),
 (4, 'gretel m o', '97412354', 'mmm@mmm.com', '41848879', 1, '2025-07-05 02:52:27'),
 (5, 'sdsd', 'sdsd', 'sdsdds', 'dsdsd', 1, '2025-07-05 03:02:26');
 
