@@ -5,6 +5,16 @@ import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import util.TemaUtil;
+
+import com.formdev.flatlaf.FlatDarkLaf;
 
 public class Login extends JFrame {
 
@@ -12,16 +22,17 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtClave;
+	private JToggleButton toggleTema;
+	
+	private final String CONFIG_FILE = "config.properties";
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			try {
-				Login frame = new Login();
-				frame.setVisible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
+
+	    EventQueue.invokeLater(() -> {
+	        Login frame = new Login();
+	        frame.setVisible(true);
+	    });
 	}
 
 	public Login() {
@@ -60,7 +71,6 @@ public class Login extends JFrame {
 		btnIngresar.setBounds(160, 180, 120, 30);
 		contentPane.add(btnIngresar);
 
-	
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String usuario = txtUsuario.getText();
@@ -69,17 +79,26 @@ public class Login extends JFrame {
 				if (usuario.equals("admin") && clave.equals("1234")) {
 					JOptionPane.showMessageDialog(null, "Acceso permitido");
 
-					 
-			        PanelPrincipal panel = new PanelPrincipal();
-			        panel.setVisible(true);
+					PanelPrincipal panel = new PanelPrincipal();
+					panel.setVisible(true);
 
-			        
-			        dispose();
-					
+					dispose();
+
 				} else {
 					JOptionPane.showMessageDialog(null, "Usuario y/o clave incorrectos");
 				}
 			}
-		});
+		});	
+		
+		toggleTema = new JToggleButton("Cambiar Tema");
+		toggleTema.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		toggleTema.setBounds(357, 220, 97, 30);
+        contentPane.add(toggleTema);
+
+        toggleTema.addActionListener(e -> {
+            TemaUtil.cambiarTema(Login.this); 
+        });
 	}
+	
+	
 }

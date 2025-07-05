@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.*;
+
+import util.TemaUtil;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -9,6 +12,8 @@ public class PanelPrincipal extends JFrame {
     private JPanel contentPane;
 
     public PanelPrincipal() {
+    	TemaUtil.actualizarUI(PanelPrincipal.this); // Aplica el tema actual
+    	
         setTitle("Panel Principal - Sistema de Canchas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 400);
@@ -59,7 +64,9 @@ public class PanelPrincipal extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
+            	
                 PanelPrincipal frame = new PanelPrincipal();
+                
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
