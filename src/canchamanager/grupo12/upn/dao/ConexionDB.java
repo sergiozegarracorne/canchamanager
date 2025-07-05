@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class ConexionDB {
     private static final String URL = "jdbc:mysql://localhost:3306/canchadb";
     private static final String USER = "root";
-    private static final String PASSWORD = "tu_contraseña";
+    private static final String PASSWORD = "";
 
     public static Connection getConexion() {
         try {

@@ -41,4 +41,10 @@ public class GestorClientes implements IGestorClientes {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Cliente buscarClientePorId(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -112,6 +112,27 @@ public class GestorClientesMySQL implements IGestorClientes {
         }
     }
 
+ 
+
+    
+    @Override
+    public Cliente buscarClientePorId(int id) {
+        String sql = "SELECT * FROM clientes WHERE id = ?";
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapearCliente(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
+    
     // 🔥 Método para mapear un ResultSet a Cliente
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
         return new Cliente(
@@ -124,4 +145,7 @@ public class GestorClientesMySQL implements IGestorClientes {
                 rs.getTimestamp("fecha_registro").toLocalDateTime()
         );
     }
+    
+    
+	
 }

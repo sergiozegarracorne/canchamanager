@@ -1,76 +1,143 @@
 package canchamanager.grupo12.upn.gui;
 
 import javax.swing.*;
-
 import util.TemaUtil;
-
 import java.awt.*;
-import java.awt.event.*;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class PanelPrincipal extends JFrame {
 
-    private JPanel contentPane;
+   
+	private static final long serialVersionUID = -7322351155600675808L;
+	private JLabel lblUsuarioStatus;
+    private JLabel lblHoraStatus;
+    private Timer timer;
 
-    public PanelPrincipal() {
-    	TemaUtil.actualizarUI(PanelPrincipal.this); // Aplica el tema actual
-    	
+    public PanelPrincipal(String usuarioActual) {
+        TemaUtil.actualizarUI(this); // Aplica el tema actual
+
         setTitle("Panel Principal - Sistema de Canchas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 600, 400);
-        contentPane = new JPanel();
-        contentPane.setLayout(null);
-        setContentPane(contentPane);
+        setSize(700, 500);
+        setLocationRelativeTo(null); // Centrar ventana
+
+        // ✅ Layout principal
+        getContentPane().setLayout(new BorderLayout());
+
+        // 🔵 Barra superior con título y botón cerrar sesión
+        JPanel barraSuperior = new JPanel(new BorderLayout());
+        barraSuperior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel lblTitulo = new JLabel("Bienvenido al Sistema de Administración");
-        lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 18));
-        lblTitulo.setBounds(120, 20, 400, 30);
-        contentPane.add(lblTitulo);
-
-        JButton btnReservas = new JButton("Gestionar Reservas");
-        btnReservas.setBounds(200, 80, 200, 40);
-        contentPane.add(btnReservas);
-
-        JButton btnCanchas = new JButton("Gestionar Canchas");
-        btnCanchas.setBounds(200, 140, 200, 40);
-        contentPane.add(btnCanchas);
-
-        JButton btnClientes = new JButton("Clientes");
-        btnClientes.setBounds(200, 200, 200, 40);
-        contentPane.add(btnClientes);
-
-        JButton btnReportes = new JButton("Reportes");
-        btnReportes.setBounds(200, 260, 200, 40);
-        contentPane.add(btnReportes);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
 
         JButton btnSalir = new JButton("Cerrar Sesión");
-        btnSalir.setBounds(400, 310, 150, 30);
-        contentPane.add(btnSalir);
-
-        btnReservas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reservas"));
-        btnCanchas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de canchas"));
-        
-        btnClientes.addActionListener(e -> {
-            VentanaClientes ventana = new VentanaClientes();
-            ventana.setVisible(true);
-        });
-        
-        btnReportes.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reportes"));
         btnSalir.addActionListener(e -> {
             dispose();
-            new Login().setVisible(true); 
+            new Login().setVisible(true);
+        });
+
+        barraSuperior.add(lblTitulo, BorderLayout.WEST);
+        barraSuperior.add(btnSalir, BorderLayout.EAST);
+        getContentPane().add(barraSuperior, BorderLayout.NORTH);
+
+        // 🟢 Panel central con botones
+        GridBagLayout gbl_panelBotones = new GridBagLayout();
+        gbl_panelBotones.rowHeights = new int[]{0, 89, 98};
+        JPanel panelBotones = new JPanel(gbl_panelBotones);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(15, 15, 15, 15);
+
+        JButton btnReservas = new JButton("Gestionar Reservas");    
+        btnReservas.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        JButton btnCanchas = new JButton("Gestionar Canchas");
+        btnCanchas.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        JButton btnClientes = new JButton("Gestion de Clientes");
+        btnClientes.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        JButton btnReportes = new JButton("Reportes Generales");
+        btnReportes.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        JButton btnUsuarios = new JButton("Gestión de Usuarios");
+        btnUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnUsuarios.putClientProperty("JButton.buttonType", "roundRect");
+
+        btnReservas.setPreferredSize(new Dimension(220, 40));
+        btnCanchas.setPreferredSize(new Dimension(220, 40));
+        btnClientes.setPreferredSize(new Dimension(220, 40));
+        btnReportes.setPreferredSize(new Dimension(220, 40));
+        btnUsuarios.setPreferredSize(new Dimension(220, 40));
+
+        // 🟠 Agregar botones al grid
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.insets = new Insets(15, 15, 15, 15);
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
+        panelBotones.add(btnReservas, gbc1);
+
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.insets = new Insets(15, 15, 15, 15);
+        gbc2.gridx = 1;
+        gbc2.gridy = 0;
+        panelBotones.add(btnCanchas, gbc2);
+
+        GridBagConstraints gbcClientes = new GridBagConstraints();
+        gbcClientes.insets = new Insets(15, 15, 15, 15);
+        gbcClientes.gridx = 0;
+        gbcClientes.gridy = 1;
+        panelBotones.add(btnClientes, gbcClientes);
+
+        GridBagConstraints gbcReportes = new GridBagConstraints();
+        gbcReportes.insets = new Insets(15, 15, 15, 15);
+        gbcReportes.gridx = 1;
+        gbcReportes.gridy = 1;
+        panelBotones.add(btnReportes, gbcReportes);
+
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        panelBotones.add(btnUsuarios, gbc);
+
+        getContentPane().add(panelBotones, BorderLayout.CENTER);
+
+        // 🔴 Barra inferior (status bar)
+        BorderLayout bl_statusBar = new BorderLayout();
+        JPanel statusBar = new JPanel(bl_statusBar);
+        statusBar.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+        lblUsuarioStatus = new JLabel("   Usuario: "+usuarioActual);
+        lblUsuarioStatus.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        lblHoraStatus = new JLabel();
+        lblHoraStatus.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        actualizarHora(); // Mostrar hora inicial
+
+        statusBar.add(lblUsuarioStatus, BorderLayout.WEST);
+        statusBar.add(lblHoraStatus, BorderLayout.EAST);
+
+        getContentPane().add(statusBar, BorderLayout.SOUTH);
+
+        // ⏰ Timer para actualizar la hora cada segundo
+        timer = new Timer(1000, e -> actualizarHora());
+        timer.start();
+
+        // 👉 Listeners de botones
+        btnReservas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reservas"));
+        btnCanchas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de canchas"));
+        btnClientes.addActionListener(e -> {
+        	GestionClientesFrame ventanaClientes = new GestionClientesFrame();
+        	ventanaClientes.setVisible(true);
+        });
+        btnReportes.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reportes"));
+        btnUsuarios.addActionListener(e -> {
+            GestionUsuariosFrame ventana = new GestionUsuariosFrame();
+            ventana.setVisible(true);
         });
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-            	
-                PanelPrincipal frame = new PanelPrincipal();
-                
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    private void actualizarHora() {
+        String horaActual = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        lblHoraStatus.setText(" Hora: "+horaActual+"  ");
     }
 }

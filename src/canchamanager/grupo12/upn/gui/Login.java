@@ -5,16 +5,10 @@ import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 
-import com.formdev.flatlaf.FlatLightLaf;
 
 import util.TemaUtil;
 
-import com.formdev.flatlaf.FlatDarkLaf;
 
 public class Login extends JFrame {
 
@@ -24,7 +18,6 @@ public class Login extends JFrame {
 	private JPasswordField txtClave;
 	private JToggleButton toggleTema;
 	
-	private final String CONFIG_FILE = "config.properties";
 
 	public static void main(String[] args) {
 		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
@@ -77,9 +70,9 @@ public class Login extends JFrame {
 				String clave = String.valueOf(txtClave.getPassword());
 
 				if (usuario.equals("admin") && clave.equals("1234")) {
-					JOptionPane.showMessageDialog(null, "Acceso permitido");
+					//JOptionPane.showMessageDialog(null, "Acceso permitido");
 
-					PanelPrincipal panel = new PanelPrincipal();
+					PanelPrincipal panel = new PanelPrincipal(txtUsuario.getText());
 					panel.setVisible(true);
 
 					dispose();
