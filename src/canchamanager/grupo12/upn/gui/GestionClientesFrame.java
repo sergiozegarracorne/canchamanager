@@ -1,6 +1,7 @@
 package canchamanager.grupo12.upn.gui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import canchamanager.grupo12.upn.dao.GestorClientesMySQL;
 import canchamanager.grupo12.upn.dao.IGestorClientes;
@@ -55,9 +56,12 @@ public class GestionClientesFrame extends JFrame {
 		getContentPane().add(panelFormulario, BorderLayout.NORTH);
 
 		// Tabla de clientes
-		modeloTabla = new DefaultTableModel(new String[] { "ID", "DNI", "Nombre", "Teléfono", "Email", "Frecuente" },
-				0) {
+		modeloTabla = new DefaultTableModel(new String[] { "ID", "DNI", "Nombre", "Teléfono", "Email", "Frecuente" },0) {
 			private static final long serialVersionUID = 7734755726198314684L;
+			
+			public Class<?> getColumnClass(int column) {
+		        return (column == 5) ? Boolean.class : String.class;
+		    }
 
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -73,6 +77,14 @@ public class GestionClientesFrame extends JFrame {
 		tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(100); // Teléfono
 		tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(200); // Email
 		tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(80); // Frecuente
+		
+		// Crear un renderer para centrar
+		DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
+		centroRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		tablaClientes.getColumnModel().getColumn(1).setCellRenderer(centroRenderer); // ID
+		tablaClientes.getColumnModel().getColumn(3).setCellRenderer(centroRenderer); // DNI
+		tablaClientes.getColumnModel().getColumn(4).setCellRenderer(centroRenderer); // DNI
 
 		JScrollPane scrollPane = new JScrollPane(tablaClientes);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -98,6 +110,9 @@ public class GestionClientesFrame extends JFrame {
 				}
 			}
 		});
+		
+		
+		 SwingUtilities.invokeLater(() -> txtDni.requestFocusInWindow());
 	}
 
 	private JPanel crearFila(String etiqueta, JComponent campo) {

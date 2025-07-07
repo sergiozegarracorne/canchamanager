@@ -66,4 +66,6 @@ public interface IGestorUsuarios {
      * @param nuevaPassword Nueva contraseña
      */
     void cambiarPassword(int idUsuario, String nuevaPassword);
+
+	Usuario verificar(String username);
 }

@@ -53,4 +53,10 @@ public class GestorUsuarios implements IGestorUsuarios {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Usuario verificar(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
