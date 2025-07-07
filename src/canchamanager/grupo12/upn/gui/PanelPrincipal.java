@@ -45,7 +45,7 @@ public class PanelPrincipal extends JFrame {
 
         // 🟢 Panel central con botones
         GridBagLayout gbl_panelBotones = new GridBagLayout();
-        gbl_panelBotones.rowHeights = new int[]{0, 89, 98};
+        gbl_panelBotones.rowHeights = new int[]{0, 89, 98, 0, 0};
         JPanel panelBotones = new JPanel(gbl_panelBotones);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
@@ -81,7 +81,7 @@ public class PanelPrincipal extends JFrame {
 
         GridBagConstraints gbc2 = new GridBagConstraints();
         gbc2.insets = new Insets(15, 15, 15, 15);
-        gbc2.gridx = 1;
+        gbc2.gridx = 2;
         gbc2.gridy = 0;
         panelBotones.add(btnCanchas, gbc2);
 
@@ -93,14 +93,21 @@ public class PanelPrincipal extends JFrame {
 
         GridBagConstraints gbcReportes = new GridBagConstraints();
         gbcReportes.insets = new Insets(15, 15, 15, 15);
-        gbcReportes.gridx = 1;
+        gbcReportes.gridx = 2;
         gbcReportes.gridy = 1;
         panelBotones.add(btnReportes, gbcReportes);
 
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 3;
         panelBotones.add(btnUsuarios, gbc);
 
         getContentPane().add(panelBotones, BorderLayout.CENTER);
+        
+        JButton btnNewButton = new JButton("New button");
+        GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+        gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
+        gbc_btnNewButton.gridx = 1;
+        gbc_btnNewButton.gridy = 4;
+        panelBotones.add(btnNewButton, gbc_btnNewButton);
 
         // 🔴 Barra inferior (status bar)
         BorderLayout bl_statusBar = new BorderLayout();
