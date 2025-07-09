@@ -1,19 +1,14 @@
 package canchamanager.grupo12.upn.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.*;
-
-import canchamanager.grupo12.upn.dao.ConexionDB;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.SQLException;
 
+import util.ConexionMonitor;
 import util.TemaUtil;
-import java.awt.Insets;
 
 public class Login extends JFrame {
 
@@ -30,21 +25,23 @@ public class Login extends JFrame {
 			Login frame = new Login();
 			frame.setVisible(true);
 		});
+
 	}
-
-
 
 	public Login() {
 		setTitle("Ingreso al Sistema");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setUndecorated(true); // 🔥 Quita los bordes y la barra de título
 		setBounds(100, 100, 480, 300);
+		setLocationRelativeTo(null); // 🟢 Centrar la ventana
+
 		contentPane = new JPanel();
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 
-		JLabel lblTitulo = new JLabel("Sistema de Administración de Reservas");
+		JLabel lblTitulo = new JLabel("Sistema de Gestion de Reservas");
 		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblTitulo.setBounds(60, 20, 360, 30);
+		lblTitulo.setBounds(85, 22, 321, 30);
 		contentPane.add(lblTitulo);
 
 		JLabel lblUsuario = new JLabel("Usuario:");
@@ -67,7 +64,7 @@ public class Login extends JFrame {
 
 		JButton btnIngresar = new JButton("Ingresar");
 		btnIngresar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnIngresar.setBounds(160, 180, 120, 30);
+		btnIngresar.setBounds(113, 180, 120, 30);
 		contentPane.add(btnIngresar);
 
 		btnIngresar.addActionListener(new ActionListener() {
@@ -89,42 +86,28 @@ public class Login extends JFrame {
 			}
 		});
 
-		JButton btnEstadoConexion = new JButton("●"); // Por ahora un círculo
-		btnEstadoConexion.setMargin(new Insets(0, 0, 0, 0));
-		btnEstadoConexion.setForeground(Color.RED);
-		btnEstadoConexion.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		btnEstadoConexion.setBounds(10, 209, 47, 41);
-		btnEstadoConexion.setEnabled(false); // No editable
-		btnEstadoConexion.setFocusable(false);
-		contentPane.add(btnEstadoConexion);
-
-		btnEstadoConexion.setEnabled(true); // Permitir click
-		btnEstadoConexion.addActionListener(e -> {
-			if (!hayConexion()) {
-				JOptionPane.showMessageDialog(this,
-						"❌ No se pudo conectar con la base de datos.\n"
-								+ "Verifica tu red o contacta al administrador.",
-						"Error de Conexión", JOptionPane.ERROR_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(this, "✅ Conexión establecida correctamente.", "Conexión OK",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-
 		toggleTema = new JToggleButton("Cambiar Tema");
 		toggleTema.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		toggleTema.setBounds(357, 220, 97, 30);
+		toggleTema.setBounds(373, 259, 97, 30);
 		contentPane.add(toggleTema);
 
 		toggleTema.addActionListener(e -> {
 			TemaUtil.cambiarTema(Login.this);
 		});
 
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnSalir.setBounds(282, 180, 102, 30);
+		contentPane.add(btnSalir);
 
-	
-		
-		
-	
+		btnSalir.addActionListener(e -> System.exit(0));
+
+		SwingUtilities.invokeLater(() -> {
+			JLabel semaforoConexion = ConexionMonitor.crearSemaforo();
+			semaforoConexion.setBounds(450, 10, 20, 20);
+			contentPane.add(semaforoConexion);
+			contentPane.repaint();
+		});
 
 	}
 

@@ -3,14 +3,13 @@ package canchamanager.grupo12.upn.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
-import canchamanager.grupo12.upn.dao.GestorUsuariosMySQL;
-import canchamanager.grupo12.upn.dao.IGestorUsuarios;
-import canchamanager.grupo12.upn.model.Usuario;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+
+import canchamanager.grupo12.controller.UsuarioController;
+import canchamanager.grupo12.upn.model.Usuario;
+
 
 public class GestionUsuariosFrame extends JFrame {
 
@@ -26,7 +25,7 @@ public class GestionUsuariosFrame extends JFrame {
 	private JTable tablaUsuarios;
 	private DefaultTableModel modeloTabla;
 
-	private IGestorUsuarios gestorUsuarios = new GestorUsuariosMySQL();
+	private UsuarioController usuarioController = new UsuarioController();
 
 	public GestionUsuariosFrame() {
 		setTitle("Gestión de Usuarios");
@@ -163,36 +162,29 @@ public class GestionUsuariosFrame extends JFrame {
 			return;
 		}
 
-		Usuario usuarioExistente = gestorUsuarios.verificar(username);
 		if (id == null || id.isEmpty()) {
-
-			if (usuarioExistente == null) {
-				// Crear nuevo
-				Usuario nuevo = new Usuario(username, nombreCompleto, password, rol);
-				gestorUsuarios.registrarUsuario(nuevo);
+			
+			Usuario nuevo = new Usuario(username, nombreCompleto, password, rol);			
+			if(usuarioController.registrarUsuario(nuevo)) {
 				JOptionPane.showMessageDialog(this, "Usuario registrado correctamente");
 				limpiarFormulario();
-			} else {
+			}else {
 				JOptionPane.showMessageDialog(this,
-						"Ya existe un usuario con este Nombre de Usuario: " + usuarioExistente.getUsername(), "Error",
+						"Ya existe un usuario con este Nombre de Usuario: ", "Error",
 						JOptionPane.ERROR_MESSAGE);
-				return;
-
+				return;				
 			}
+			
 		} else {
-			// Actualizar datos
-			if (usuarioExistente != null && usuarioExistente.getId() != Integer.parseInt(id)) {
-				JOptionPane.showMessageDialog(this,
-						"El Nombre de Usuario ya esta en Uso por: " + usuarioExistente.getNombreCompleto(), "Error",JOptionPane.ERROR_MESSAGE);
-			} else {
-				Usuario actualizar = new Usuario(Integer.valueOf(id),username,nombreCompleto,password,rol,null,null);
-				gestorUsuarios.actualizarUsuario(actualizar);				
+			Usuario actualizar = new Usuario(Integer.valueOf(id),username,nombreCompleto,password,rol,null,null);
+			if(usuarioController.actualizarUsuario(actualizar)) {
 				JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente");
 				limpiarFormulario();
-			}
-
+				
+			}else {
+				JOptionPane.showMessageDialog(this,"El Nombre de Usuario ya esta en Uso", "Error",JOptionPane.ERROR_MESSAGE);
+			}				
 		}
-
 		
 		cargarUsuarios();
 	}
@@ -208,7 +200,7 @@ public class GestionUsuariosFrame extends JFrame {
 
 	private void cargarUsuarios() {
 		modeloTabla.setRowCount(0); // limpiar tabla
-		List<Usuario> lista = gestorUsuarios.listarTodosLosUsuarios();
+		List<Usuario> lista = usuarioController.listarUsuarios();
 		for (Usuario u : lista) {
 			String estado = u.isActivo() ? "Activo" : "Inactivo";
 			modeloTabla.addRow(new Object[] { u.getId(), u.getUsername(), u.getNombreCompleto(), u.getRol(), estado });
@@ -217,7 +209,7 @@ public class GestionUsuariosFrame extends JFrame {
 
 	private void cargarFormularioDesdeTabla(int fila) {
 		int id = (int) modeloTabla.getValueAt(fila, 0);
-		Usuario u = gestorUsuarios.listarTodosLosUsuarios().stream().filter(us -> us.getId() == id).findFirst()
+		Usuario u = usuarioController.listarUsuarios().stream().filter(us -> us.getId() == id).findFirst()
 				.orElse(null);
 		if (u != null) {
 			txtId.setText(String.valueOf(u.getId()));
@@ -230,13 +222,13 @@ public class GestionUsuariosFrame extends JFrame {
 
 	private void darDeBajaUsuario(int fila) {
 		int id = (int) modeloTabla.getValueAt(fila, 0);
-		gestorUsuarios.darDeBajaUsuario(id);
+		usuarioController.darDeBaja(id);
 		cargarUsuarios();
 	}
 
 	private void reactivarUsuario(int fila) {
 		int id = (int) modeloTabla.getValueAt(fila, 0);
-		gestorUsuarios.reactivarUsuario(id);
+		usuarioController.reactivar(id);
 		cargarUsuarios();
 	}
 }

@@ -14,12 +14,12 @@ public class ConexionMonitor {
     // 🔥 Componente semáforo reutilizable
     public static JLabel crearSemaforo() {
         JLabel semaforo = new JLabel("●");
-        semaforo.setFont(new Font("Arial", Font.BOLD, 20));
+        semaforo.setFont(new Font("Arial", Font.BOLD, 30));
         semaforo.setForeground(Color.GRAY); // Color inicial
         actualizarSemaforo(semaforo);       // Primera comprobación
 
         if (timer == null) {
-            timer = new Timer(5000, e -> actualizarSemaforo(semaforo));
+            timer = new Timer(10000, e -> actualizarSemaforo(semaforo));
             timer.start();
         }
 
@@ -39,13 +39,9 @@ public class ConexionMonitor {
         // ⚠️ Detectar cambio de estado
         if (conectado != estadoPrevio) {
             if (conectado) {
-                JOptionPane.showMessageDialog(null, 
-                    "✅ Conexión restablecida con la base de datos.", 
-                    "Base de datos", JOptionPane.INFORMATION_MESSAGE);
+            	 semaforo.setForeground(Color.GREEN); // 🟢 Conexión OK
             } else {
-                JOptionPane.showMessageDialog(null, 
-                    "❌ Se ha perdido la conexión con la base de datos.", 
-                    "Base de datos", JOptionPane.ERROR_MESSAGE);
+            	 semaforo.setForeground(Color.RED);   // 🔴 Sin conexión
             }
         }
 
