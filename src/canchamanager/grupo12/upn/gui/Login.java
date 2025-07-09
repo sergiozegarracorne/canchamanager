@@ -1,14 +1,19 @@
 package canchamanager.grupo12.upn.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.*;
+
+import canchamanager.grupo12.upn.dao.ConexionDB;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import util.TemaUtil;
-
+import java.awt.Insets;
 
 public class Login extends JFrame {
 
@@ -17,16 +22,17 @@ public class Login extends JFrame {
 	private JTextField txtUsuario;
 	private JPasswordField txtClave;
 	private JToggleButton toggleTema;
-	
 
 	public static void main(String[] args) {
 		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
 
-	    EventQueue.invokeLater(() -> {
-	        Login frame = new Login();
-	        frame.setVisible(true);
-	    });
+		EventQueue.invokeLater(() -> {
+			Login frame = new Login();
+			frame.setVisible(true);
+		});
 	}
+
+
 
 	public Login() {
 		setTitle("Ingreso al Sistema");
@@ -70,7 +76,7 @@ public class Login extends JFrame {
 				String clave = String.valueOf(txtClave.getPassword());
 
 				if (usuario.equals("admin") && clave.equals("1234")) {
-					//JOptionPane.showMessageDialog(null, "Acceso permitido");
+					// JOptionPane.showMessageDialog(null, "Acceso permitido");
 
 					PanelPrincipal panel = new PanelPrincipal(txtUsuario.getText());
 					panel.setVisible(true);
@@ -81,17 +87,45 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "Usuario y/o clave incorrectos");
 				}
 			}
-		});	
-		
+		});
+
+		JButton btnEstadoConexion = new JButton("●"); // Por ahora un círculo
+		btnEstadoConexion.setMargin(new Insets(0, 0, 0, 0));
+		btnEstadoConexion.setForeground(Color.RED);
+		btnEstadoConexion.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnEstadoConexion.setBounds(10, 209, 47, 41);
+		btnEstadoConexion.setEnabled(false); // No editable
+		btnEstadoConexion.setFocusable(false);
+		contentPane.add(btnEstadoConexion);
+
+		btnEstadoConexion.setEnabled(true); // Permitir click
+		btnEstadoConexion.addActionListener(e -> {
+			if (!hayConexion()) {
+				JOptionPane.showMessageDialog(this,
+						"❌ No se pudo conectar con la base de datos.\n"
+								+ "Verifica tu red o contacta al administrador.",
+						"Error de Conexión", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, "✅ Conexión establecida correctamente.", "Conexión OK",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+
 		toggleTema = new JToggleButton("Cambiar Tema");
 		toggleTema.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		toggleTema.setBounds(357, 220, 97, 30);
-        contentPane.add(toggleTema);
+		contentPane.add(toggleTema);
 
-        toggleTema.addActionListener(e -> {
-            TemaUtil.cambiarTema(Login.this); 
-        });
+		toggleTema.addActionListener(e -> {
+			TemaUtil.cambiarTema(Login.this);
+		});
+
+
+	
+		
+		
+	
+
 	}
-	
-	
+
 }

@@ -13,8 +13,8 @@ public class ConexionDB {
         try {
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            System.err.println("Error al conectar con la base de datos");
-            e.printStackTrace();
+            //System.err.println("Error al conectar con la base de datos");
+            //e.printStackTrace(); 
             return null;
         }
     }

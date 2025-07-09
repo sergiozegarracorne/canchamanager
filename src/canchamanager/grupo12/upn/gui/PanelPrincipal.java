@@ -101,26 +101,6 @@ public class PanelPrincipal extends JFrame {
         panelBotones.add(btnUsuarios, gbc);
 
         getContentPane().add(panelBotones, BorderLayout.CENTER);
-        
-        JButton btnNewButton_1 = new JButton("New button");
-        GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-        gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-        gbc_btnNewButton_1.gridx = 0;
-        gbc_btnNewButton_1.gridy = 4;
-        panelBotones.add(btnNewButton_1, gbc_btnNewButton_1);
-        
-        JButton btnNewButton = new JButton("New button");
-        GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-        gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
-        gbc_btnNewButton.gridx = 1;
-        gbc_btnNewButton.gridy = 4;
-        panelBotones.add(btnNewButton, gbc_btnNewButton);
-        
-        JButton btnNewButton_2 = new JButton("New button");
-        GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-        gbc_btnNewButton_2.gridx = 2;
-        gbc_btnNewButton_2.gridy = 4;
-        panelBotones.add(btnNewButton_2, gbc_btnNewButton_2);
 
         // 🔴 Barra inferior (status bar)
         BorderLayout bl_statusBar = new BorderLayout();
