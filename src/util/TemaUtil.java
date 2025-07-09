@@ -4,20 +4,18 @@ import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
-import java.io.*;
-import java.util.Properties;
 
 public class TemaUtil {
-    private static final String CONFIG_FILE = "config.properties";
+
     private static boolean temaOscuro = false; // Por defecto claro
 
-    // Aplicar el tema guardado
+    // ✅ Aplicar el tema guardado
     public static void aplicarTemaGuardado() {
         temaOscuro = cargarTemaGuardado();
         aplicarTema(temaOscuro);
     }
 
-    // Aplicar tema (claro u oscuro) en la app
+    // ✅ Aplicar tema (claro u oscuro) en la app
     public static void aplicarTema(boolean oscuro) {
         try {
             if (oscuro) {
@@ -31,40 +29,30 @@ public class TemaUtil {
         }
     }
 
-    // Alternar tema en tiempo real para una ventana
+    // ✅ Alternar tema en tiempo real para una ventana
     public static void cambiarTema(JFrame frame) {
-        aplicarTema(!temaOscuro); // alternar
+        aplicarTema(!temaOscuro); // Alternar
         actualizarUI(frame);
-        guardarTema(temaOscuro);
+        guardarTema(temaOscuro);  // Guardar preferencia
     }
 
-    // Forzar actualización de todos los componentes
+    // ✅ Forzar actualización de todos los componentes
     public static void actualizarUI(JFrame frame) {
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
-    // Guardar preferencia
+    // ✅ Guardar preferencia usando ConfigUtil
     private static void guardarTema(boolean oscuro) {
-        Properties props = new Properties();
-        props.setProperty("temaOscuro", String.valueOf(oscuro));
-        try (FileOutputStream fos = new FileOutputStream(CONFIG_FILE)) {
-            props.store(fos, "Configuración de la app");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        ConfigUtil.set("temaOscuro", String.valueOf(oscuro));
     }
 
-    // Cargar preferencia
+    // ✅ Cargar preferencia usando ConfigUtil
     private static boolean cargarTemaGuardado() {
-        Properties props = new Properties();
-        try (FileInputStream fis = new FileInputStream(CONFIG_FILE)) {
-            props.load(fis);
-            return Boolean.parseBoolean(props.getProperty("temaOscuro", "false"));
-        } catch (IOException e) {
-            return false; // Por defecto claro
-        }
+    	String themaActual = ConfigUtil.get("temaOscuro");
+        return Boolean.parseBoolean(themaActual);
     }
 
+    // ✅ Obtener estado actual del tema
     public static boolean isTemaOscuro() {
         return temaOscuro;
     }

@@ -3,6 +3,9 @@ package canchamanager.grupo12.upn.gui;
 import java.awt.EventQueue;
 import javax.swing.*;
 
+import canchamanager.grupo12.upn.controller.LoginController;
+import canchamanager.grupo12.upn.model.Usuario;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +20,8 @@ public class Login extends JFrame {
 	private JTextField txtUsuario;
 	private JPasswordField txtClave;
 	private JToggleButton toggleTema;
+	
+	private LoginController loginController = new LoginController();
 
 	public static void main(String[] args) {
 		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
@@ -68,22 +73,25 @@ public class Login extends JFrame {
 		contentPane.add(btnIngresar);
 
 		btnIngresar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String usuario = txtUsuario.getText();
-				String clave = String.valueOf(txtClave.getPassword());
+		    public void actionPerformed(ActionEvent e) {
+		        String usuario = txtUsuario.getText().trim();
+		        String clave = String.valueOf(txtClave.getPassword()).trim();
 
-				if (usuario.equals("admin") && clave.equals("1234")) {
-					// JOptionPane.showMessageDialog(null, "Acceso permitido");
+		        if (usuario.isEmpty() || clave.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Debe ingresar usuario y clave.");
+		            return;
+		        }
 
-					PanelPrincipal panel = new PanelPrincipal(txtUsuario.getText());
-					panel.setVisible(true);
-
-					dispose();
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Usuario y/o clave incorrectos");
-				}
-			}
+		        Usuario u = loginController.autenticar(usuario, clave);
+		        if (u != null) {
+		            //abrir PanelPrincipal con el nombre de usuario
+		            PanelPrincipal panel = new PanelPrincipal(u.getNombreCompleto());
+		            panel.setVisible(true);
+		            dispose(); //ciierra la ventana de login
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Usuario y/o clave incorrectos o usuario inactivo.");
+		        }
+		    }
 		});
 
 		toggleTema = new JToggleButton("Cambiar Tema");
