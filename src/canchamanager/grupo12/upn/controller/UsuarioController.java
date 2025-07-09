@@ -1,9 +1,10 @@
-package canchamanager.grupo12.controller;
+package canchamanager.grupo12.upn.controller;
 
 import java.util.List;
 
 import canchamanager.grupo12.upn.dao.GestorUsuariosMySQL;
 import canchamanager.grupo12.upn.model.Usuario;
+import util.ConfigUtil;
 import canchamanager.grupo12.upn.dao.IGestorUsuarios;
 
 public class UsuarioController {
@@ -41,5 +42,19 @@ public class UsuarioController {
 
     public void reactivar(int id) {
         dao.reactivarUsuario(id);
+    }
+    
+ 
+    public boolean cambiarPassword(int idUsuario, String nuevaClave) {
+        if (nuevaClave == null || nuevaClave.trim().isEmpty()) {
+            // 📦 Obtiene la clave default desde config.properties
+            nuevaClave = ConfigUtil.get("default.password");
+        }
+        return dao.cambiarPassword(idUsuario, nuevaClave);
+    }
+
+ 
+    public boolean cambiarPassword(int idUsuario) {
+        return cambiarPassword(idUsuario, null);
     }
 }

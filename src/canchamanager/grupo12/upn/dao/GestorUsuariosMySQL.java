@@ -1,5 +1,6 @@
 package canchamanager.grupo12.upn.dao;
 
+import java.awt.datatransfer.Transferable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import canchamanager.grupo12.upn.model.Usuario;
+import util.ConfigUtil;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 public class GestorUsuariosMySQL implements IGestorUsuarios {
@@ -38,28 +41,23 @@ public class GestorUsuariosMySQL implements IGestorUsuarios {
 		}
 		return null; // usuario no encontrado o contraseña incorrecta
 	}
-	
-	
+
 	@Override
 	public Usuario verificar(String username) {
-	    String sql = "SELECT * FROM usuarios WHERE username=? ";
-	    try (Connection conn = ConexionDB.getConexion(); 
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+		String sql = "SELECT * FROM usuarios WHERE username=? ";
+		try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-	        stmt.setString(1, username);
-	        ResultSet rs = stmt.executeQuery();
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
 
-	        if (rs.next()) {				
-	            return mapearUsuario(rs);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return null; // usuario no encontrado
+			if (rs.next()) {
+				return mapearUsuario(rs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null; // usuario no encontrado
 	}
-	
-	
-	
 
 	private Usuario mapearUsuario(ResultSet rs) throws SQLException {
 		LocalDateTime fechaAlta = rs.getTimestamp("fecha_alta").toLocalDateTime();
@@ -71,7 +69,7 @@ public class GestorUsuariosMySQL implements IGestorUsuarios {
 	}
 
 	@Override
-	public void registrarUsuario(Usuario usuario) {
+	public boolean registrarUsuario(Usuario usuario) {
 		String sql = "INSERT INTO usuarios (username, nombre_completo, password, rol, fecha_alta) "
 				+ "VALUES (?, ?, ?, ?, NOW())";
 		try (Connection conn = ConexionDB.getConexion();
@@ -91,13 +89,17 @@ public class GestorUsuariosMySQL implements IGestorUsuarios {
 					usuario.setId(keys.getInt(1));
 				}
 			}
+			
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
+		
 	}
 
 	@Override
-	public void actualizarUsuario(Usuario usuario) {
+	public boolean actualizarUsuario(Usuario usuario) {
 		String sql = "UPDATE usuarios SET username=?, nombre_completo=?, rol=? WHERE id=?";
 		try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setString(1, usuario.getUsername());
@@ -105,9 +107,12 @@ public class GestorUsuariosMySQL implements IGestorUsuarios {
 			stmt.setString(3, usuario.getRol());
 			stmt.setInt(4, usuario.getId());
 			stmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
+		
 	}
 
 	@Override
@@ -142,36 +147,49 @@ public class GestorUsuariosMySQL implements IGestorUsuarios {
 		return lista;
 	}
 
-	public void darDeBajaUsuario(int idUsuario) {
+	public boolean darDeBajaUsuario(int idUsuario) {
 		String sql = "UPDATE usuarios SET fecha_baja=NOW() WHERE id=?";
 		try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, idUsuario);
 			stmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
 	@Override
-	public void reactivarUsuario(int idUsuario) {
+	public boolean reactivarUsuario(int idUsuario) {
 		String sql = "UPDATE usuarios SET fecha_baja=NULL WHERE id=?";
 		try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, idUsuario);
 			stmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
+		
 	}
 
 	@Override
-	public void cambiarPassword(int idUsuario, String nuevaPassword) {
-		String sql = "UPDATE usuarios SET password=? WHERE id=?";
-		try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, nuevaPassword);
-			stmt.setInt(2, idUsuario);
-			stmt.executeUpdate();
+	public boolean cambiarPassword(int idUsuario, String nuevaPassword) {
+
+		try {
+			nuevaPassword = BCrypt.hashpw(nuevaPassword, BCrypt.gensalt());
+
+			String sql = "UPDATE usuarios SET password=? WHERE id=?";
+			try (Connection conn = ConexionDB.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+				stmt.setString(1, nuevaPassword);
+				stmt.setInt(2, idUsuario);
+				stmt.executeUpdate();
+				return true;
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 

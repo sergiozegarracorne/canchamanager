@@ -21,7 +21,7 @@ public interface IGestorUsuarios {
      *
      * @param usuario Objeto Usuario a registrar
      */
-    void registrarUsuario(Usuario usuario);
+    boolean registrarUsuario(Usuario usuario);
 
     /**
      * Actualiza los datos de un usuario existente.
@@ -29,7 +29,7 @@ public interface IGestorUsuarios {
      *
      * @param usuario Objeto Usuario con datos actualizados
      */
-    void actualizarUsuario(Usuario usuario);
+    boolean actualizarUsuario(Usuario usuario);
 
     /**
      * Lista todos los usuarios activos.
@@ -50,14 +50,14 @@ public interface IGestorUsuarios {
      *
      * @param idUsuario ID del usuario a desactivar
      */
-    void darDeBajaUsuario(int idUsuario);
+    boolean darDeBajaUsuario(int idUsuario);
 
     /**
      * Reactiva un usuario (elimina fecha_baja).
      *
      * @param idUsuario ID del usuario a reactivar
      */
-    void reactivarUsuario(int idUsuario);
+    boolean reactivarUsuario(int idUsuario);
 
     /**
      * Cambia la contraseña de un usuario.
@@ -65,7 +65,7 @@ public interface IGestorUsuarios {
      * @param idUsuario ID del usuario
      * @param nuevaPassword Nueva contraseña
      */
-    void cambiarPassword(int idUsuario, String nuevaPassword);
+    boolean cambiarPassword(int idUsuario, String nuevaPassword);
 
 	Usuario verificar(String username);
 	

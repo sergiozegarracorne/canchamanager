@@ -13,13 +13,15 @@ public class GestorUsuarios implements IGestorUsuarios {
 	}
 
 	@Override
-	public void registrarUsuario(Usuario usuario) {
+	public boolean registrarUsuario(Usuario usuario) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void actualizarUsuario(Usuario usuario) {
+	public boolean actualizarUsuario(Usuario usuario) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
@@ -37,19 +39,22 @@ public class GestorUsuarios implements IGestorUsuarios {
 	}
 
 	@Override
-	public void darDeBajaUsuario(int idUsuario) {
+	public boolean darDeBajaUsuario(int idUsuario) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void reactivarUsuario(int idUsuario) {
+	public boolean reactivarUsuario(int idUsuario) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void cambiarPassword(int idUsuario, String nuevaPassword) {
+	public boolean cambiarPassword(int idUsuario, String nuevaPassword) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}

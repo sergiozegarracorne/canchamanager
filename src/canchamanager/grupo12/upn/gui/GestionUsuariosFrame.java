@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-import canchamanager.grupo12.controller.UsuarioController;
+import canchamanager.grupo12.upn.controller.UsuarioController;
 import canchamanager.grupo12.upn.model.Usuario;
 
 
@@ -128,10 +128,12 @@ public class GestionUsuariosFrame extends JFrame {
 					JMenuItem editar = new JMenuItem("Editar");
 					JMenuItem darBaja = new JMenuItem("Dar de Baja");
 					JMenuItem activar = new JMenuItem("Activar");
+					JMenuItem resetClave = new JMenuItem("Reset Clave");
 
 					editar.addActionListener(a -> cargarFormularioDesdeTabla(fila));
 					darBaja.addActionListener(a -> darDeBajaUsuario(fila));
 					activar.addActionListener(a -> reactivarUsuario(fila));
+					resetClave.addActionListener(a -> resetClave(fila));
 
 					String estado = modeloTabla.getValueAt(fila, 4).toString();
 					menu.add(editar);
@@ -141,6 +143,7 @@ public class GestionUsuariosFrame extends JFrame {
 						menu.add(activar);
 					}
 
+					menu.add(resetClave);
 					menu.show(tablaUsuarios, e.getX(), e.getY());
 				}
 			}
@@ -179,13 +182,11 @@ public class GestionUsuariosFrame extends JFrame {
 			Usuario actualizar = new Usuario(Integer.valueOf(id),username,nombreCompleto,password,rol,null,null);
 			if(usuarioController.actualizarUsuario(actualizar)) {
 				JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente");
-				limpiarFormulario();
-				
+				limpiarFormulario();				
 			}else {
 				JOptionPane.showMessageDialog(this,"El Nombre de Usuario ya esta en Uso", "Error",JOptionPane.ERROR_MESSAGE);
 			}				
-		}
-		
+		}		
 		cargarUsuarios();
 	}
 
@@ -193,6 +194,7 @@ public class GestionUsuariosFrame extends JFrame {
 		txtId.setText("");
 		txtUsername.setText("");
 		txtNombreCompleto.setText("");
+		txtPassword.setEnabled(true);
 		txtPassword.setText("");
 		comboRol.setModel(new DefaultComboBoxModel<String>(new String[] { "ADMIN", "USUARIO" }));
 		comboRol.setSelectedIndex(0);
@@ -215,7 +217,8 @@ public class GestionUsuariosFrame extends JFrame {
 			txtId.setText(String.valueOf(u.getId()));
 			txtUsername.setText(u.getUsername());
 			txtNombreCompleto.setText(u.getNombreCompleto());
-			txtPassword.setText("*************"); // no mostrar contraseña por seguridad
+			txtPassword.setText(u.getPassword());//.setText("*************"); // no mostrar contraseña por seguridad
+			txtPassword.setEnabled(false);
 			comboRol.setSelectedItem(u.getRol());
 		}
 	}
@@ -230,5 +233,11 @@ public class GestionUsuariosFrame extends JFrame {
 		int id = (int) modeloTabla.getValueAt(fila, 0);
 		usuarioController.reactivar(id);
 		cargarUsuarios();
+	}
+	
+	private void resetClave(int fila) {
+		int id = (int) modeloTabla.getValueAt(fila, 0);
+		usuarioController.cambiarPassword(id);
+		cargarUsuarios();		
 	}
 }
