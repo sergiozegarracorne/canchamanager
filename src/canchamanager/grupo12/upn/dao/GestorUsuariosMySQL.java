@@ -1,6 +1,6 @@
 package canchamanager.grupo12.upn.dao;
 
-import java.awt.datatransfer.Transferable;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import canchamanager.grupo12.upn.model.Usuario;
-import util.ConfigUtil;
+
 
 import org.mindrot.jbcrypt.BCrypt;
 

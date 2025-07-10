@@ -3,6 +3,8 @@ package canchamanager.grupo12.upn.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import canchamanager.grupo12.upn.controller.ClienteController;
 import canchamanager.grupo12.upn.dao.GestorClientesMySQL;
 import canchamanager.grupo12.upn.dao.IGestorClientes;
 import canchamanager.grupo12.upn.model.Cliente;
@@ -19,7 +21,7 @@ public class GestionClientesFrame extends JFrame {
 	private JTable tablaClientes;
 	private DefaultTableModel modeloTabla;
 
-	private IGestorClientes gestorClientes = new GestorClientesMySQL();
+	private ClienteController clienteController = new ClienteController();
 
 	public GestionClientesFrame() {
 		setTitle("Gestión de Clientes");
@@ -56,12 +58,13 @@ public class GestionClientesFrame extends JFrame {
 		getContentPane().add(panelFormulario, BorderLayout.NORTH);
 
 		// Tabla de clientes
-		modeloTabla = new DefaultTableModel(new String[] { "ID", "DNI", "Nombre", "Teléfono", "Email", "Frecuente" },0) {
+		modeloTabla = new DefaultTableModel(new String[] { "ID", "DNI", "Nombre", "Teléfono", "Email", "Frecuente" },
+				0) {
 			private static final long serialVersionUID = 7734755726198314684L;
-			
+
 			public Class<?> getColumnClass(int column) {
-		        return (column == 5) ? Boolean.class : String.class;
-		    }
+				return (column == 5) ? Boolean.class : String.class;
+			}
 
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -77,11 +80,11 @@ public class GestionClientesFrame extends JFrame {
 		tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(100); // Teléfono
 		tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(200); // Email
 		tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(80); // Frecuente
-		
+
 		// Crear un renderer para centrar
 		DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
 		centroRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		tablaClientes.getColumnModel().getColumn(1).setCellRenderer(centroRenderer); // ID
 		tablaClientes.getColumnModel().getColumn(3).setCellRenderer(centroRenderer); // DNI
 		tablaClientes.getColumnModel().getColumn(4).setCellRenderer(centroRenderer); // DNI
@@ -110,9 +113,8 @@ public class GestionClientesFrame extends JFrame {
 				}
 			}
 		});
-		
-		
-		 SwingUtilities.invokeLater(() -> txtDni.requestFocusInWindow());
+
+		SwingUtilities.invokeLater(() -> txtDni.requestFocusInWindow());
 	}
 
 	private JPanel crearFila(String etiqueta, JComponent campo) {
@@ -126,6 +128,43 @@ public class GestionClientesFrame extends JFrame {
 		fila.add(campo);
 		return fila;
 	}
+
+	/*
+	 * 
+	 * private void guardarCliente() { String id = txtId.getText().trim(); String
+	 * nombre = txtNombre.getText(); String telefono = txtTelefono.getText(); String
+	 * email = txtEmail.getText(); String dni = txtDni.getText(); boolean frecuente
+	 * = chkFrecuente.isSelected();
+	 * 
+	 * if (nombre.isEmpty() || telefono.isEmpty() || dni.isEmpty()) {
+	 * JOptionPane.showMessageDialog(this, "Completa los campos obligatorios",
+	 * "Error", JOptionPane.ERROR_MESSAGE); return; }
+	 * 
+	 * if (id == null || id.isEmpty()) {
+	 * 
+	 * Cliente existente = gestorClientes.buscarClientePorDni(dni);
+	 * 
+	 * if (existente != null) { JOptionPane.showMessageDialog(this,
+	 * "Ya existe un cliente con este DNI: " + existente.getNombre(), "Error",
+	 * JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new Cliente(nombre,
+	 * telefono, email, dni, frecuente); gestorClientes.registrarCliente(cliente);
+	 * JOptionPane.showMessageDialog(this, "✅ Cliente registrado correctamente");
+	 * limpiarFormulario(); }
+	 * 
+	 * } else {
+	 * 
+	 * Cliente existente = gestorClientes.buscarClientePorDni(dni); if (existente !=
+	 * null && existente.getId() != Integer.parseInt(id)) {
+	 * JOptionPane.showMessageDialog(this,
+	 * "El DNI ingresado pertenece a otro cliente: " + existente.getNombre(),
+	 * "Error", JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new
+	 * Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
+	 * gestorClientes.actualizarCliente(cliente);
+	 * JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
+	 * limpiarFormulario(); }; }
+	 * 
+	 * cargarClientes(); }
+	 */
 
 	private void guardarCliente() {
 		String id = txtId.getText().trim();
@@ -141,32 +180,25 @@ public class GestionClientesFrame extends JFrame {
 		}
 
 		if (id == null || id.isEmpty()) {
-
-			Cliente existente = gestorClientes.buscarClientePorDni(dni);
-
-			if (existente != null) {
-				JOptionPane.showMessageDialog(this, "Ya existe un cliente con este DNI: " + existente.getNombre(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			} else {
-				Cliente cliente = new Cliente(nombre, telefono, email, dni, frecuente);
-				gestorClientes.registrarCliente(cliente);
+			// 🔥 Usar el controller para registrar
+			Cliente cliente = new Cliente(nombre, telefono, email, dni, frecuente);
+			if (clienteController.registrarCliente(cliente)) {
 				JOptionPane.showMessageDialog(this, "✅ Cliente registrado correctamente");
 				limpiarFormulario();
+			} else {
+				JOptionPane.showMessageDialog(this, "❌ Ya existe un cliente con este DNI", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			}
-
 		} else {
-			 
-	        Cliente existente = gestorClientes.buscarClientePorDni(dni);
-	        if (existente != null && existente.getId() != Integer.parseInt(id)) {
-	            JOptionPane.showMessageDialog(this,
-	                "El DNI ingresado pertenece a otro cliente: " + existente.getNombre(),
-	                "Error", JOptionPane.ERROR_MESSAGE);
-	        } else {
-	            Cliente cliente = new Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
-	            gestorClientes.actualizarCliente(cliente);
-	            JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
-	            limpiarFormulario();
-	        };
+			// 🔥 Usar el controller para actualizar
+			Cliente cliente = new Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
+			if (clienteController.actualizarCliente(cliente)) {
+				JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
+				limpiarFormulario();
+			} else {
+				JOptionPane.showMessageDialog(this, "❌ El DNI pertenece a otro cliente", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 
 		cargarClientes();
@@ -183,7 +215,7 @@ public class GestionClientesFrame extends JFrame {
 
 	private void cargarClientes() {
 		modeloTabla.setRowCount(0);
-		List<Cliente> lista = gestorClientes.listarClientes();
+		List<Cliente> lista = clienteController.listarClientes();
 		for (Cliente c : lista) {
 			modeloTabla.addRow(new Object[] { c.getId(), c.getDni(), c.getNombre(), c.getTelefono(), c.getEmail(),
 					c.isFrecuente() });
@@ -192,7 +224,7 @@ public class GestionClientesFrame extends JFrame {
 
 	private void cargarFormularioDesdeTabla(int fila) {
 		int id = (int) modeloTabla.getValueAt(fila, 0);
-		Cliente cliente = gestorClientes.buscarClientePorId(id);
+		Cliente cliente = clienteController.buscarClientePorId(id);
 		if (cliente != null) {
 			txtId.setText(String.valueOf(cliente.getId()));
 			txtDni.setText(cliente.getDni());
@@ -202,4 +234,5 @@ public class GestionClientesFrame extends JFrame {
 			chkFrecuente.setSelected(cliente.isFrecuente());
 		}
 	}
+
 }
