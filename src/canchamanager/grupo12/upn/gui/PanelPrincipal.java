@@ -14,6 +14,16 @@ public class PanelPrincipal extends JFrame {
 	private JLabel lblUsuarioStatus;
     private JLabel lblHoraStatus;
     private Timer timer;
+    
+    public static void main(String[] args) {
+		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
+
+		EventQueue.invokeLater(() -> {
+			PanelPrincipal frame = new PanelPrincipal(" aaa");
+			frame.setVisible(true);
+		});
+
+	}
 
     public PanelPrincipal(String usuarioActual) {
         TemaUtil.actualizarUI(this); // Aplica el tema actual
@@ -124,7 +134,17 @@ public class PanelPrincipal extends JFrame {
 
         // 👉 Listeners de botones
         btnReservas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reservas"));
-        btnCanchas.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de canchas"));
+      
+        
+        
+        btnCanchas.addActionListener(e -> {
+        	GestionCanchasFrame ventanaCanchas = new GestionCanchasFrame();
+        	ventanaCanchas.setVisible(true);
+        });
+        
+        
+        
+        
         btnClientes.addActionListener(e -> {
         	GestionClientesFrame ventanaClientes = new GestionClientesFrame();
         	ventanaClientes.setVisible(true);
