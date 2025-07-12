@@ -8,6 +8,7 @@ import java.util.List;
 
 import canchamanager.grupo12.upn.controller.CanchaController;
 import canchamanager.grupo12.upn.model.Cancha;
+import util.SwingUtil; // ✅ Importa el helper
 
 public class GestionCanchasFrame extends JFrame {
 
@@ -20,6 +21,8 @@ public class GestionCanchasFrame extends JFrame {
     private JTable tablaCanchas;
     private DefaultTableModel modeloTabla;
 
+    private JPanel panelPrincipal; // ✅ Panel contenedor principal
+
     private CanchaController canchaController = new CanchaController();
 
     public GestionCanchasFrame() {
@@ -27,6 +30,30 @@ public class GestionCanchasFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(900, 500);
         setLocationRelativeTo(null);
+
+        panelPrincipal = new JPanel(new BorderLayout());
+        getContentPane().add(panelPrincipal);
+
+        // ✅ Mostrar mensaje de carga mientras trae datos
+        SwingUtil.ejecutarConLoading(
+            panelPrincipal,
+            this::simularCargaDatos,  // 🔴 Tarea pesada (consulta DB)
+            this::inicializarComponentes, // 🟢 Mostrar GUI cuando termine
+            "⏳ Cargando datos de canchas..."
+        );
+    }
+
+    private void simularCargaDatos() {
+        // 🔥 Aquí puedes hacer una carga real si quieres (consultas a DB)
+        try {
+            Thread.sleep(500); // Simulación de espera para bases remotas
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void inicializarComponentes() {
+        panelPrincipal.removeAll(); // ✅ Limpiar el mensaje de carga
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -38,7 +65,9 @@ public class GestionCanchasFrame extends JFrame {
         JPanel panelLista = crearPanelLista();
         tabbedPane.addTab("Lista de Canchas", panelLista);
 
-        add(tabbedPane);
+        panelPrincipal.add(tabbedPane, BorderLayout.CENTER);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
 
     private JPanel crearPanelFormulario() {

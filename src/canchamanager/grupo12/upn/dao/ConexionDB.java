@@ -4,10 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import util.ConfigUtil;
+
+
 public class ConexionDB {
-    private static final String URL = "jdbc:mysql://localhost:3306/canchadb";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String URL =ConfigUtil.get("db.url");
+    private static final String USER = ConfigUtil.get("db.user");
+    private static final String PASSWORD = ConfigUtil.get("db.password");
+    
+    //private static final String URL = "jdbc:mysql://localhost:3306/canchadb";
+
 
     public static Connection getConexion() {
         try {
