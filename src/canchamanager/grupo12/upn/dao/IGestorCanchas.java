@@ -4,9 +4,9 @@ import canchamanager.grupo12.upn.model.Cancha;
 import java.util.List;
 
 public interface IGestorCanchas {
-    void registrarCancha(Cancha cancha);
-    void actualizarCancha(Cancha cancha);
-    void eliminarCancha(int id);
-    Cancha buscarCanchaPorId(int id);
-    List<Cancha> listarCanchas();
+    List<Cancha> listarTodas();
+    Cancha buscarPorId(int id);
+    boolean registrar(Cancha c);
+    boolean actualizar(Cancha c);
+    boolean eliminar(int id);
 }

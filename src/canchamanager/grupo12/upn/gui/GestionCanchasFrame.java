@@ -160,23 +160,7 @@ public class GestionCanchasFrame extends JFrame {
         label.setOpaque(true);
         label.setBackground(Color.LIGHT_GRAY);
 
-        label.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showOpenDialog(GestionCanchasFrame.this) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    try {
-                        byte[] imageBytes = Files.readAllBytes(file.toPath());
-                        ImageIcon icon = new ImageIcon(new ImageIcon(imageBytes).getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
-                        label.setIcon(icon);
-                        label.setText("");
-                        imagenes[index] = imageBytes;
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(GestionCanchasFrame.this, "Error al cargar imagen", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
+   
 
         return label;
     }
@@ -239,13 +223,13 @@ public class GestionCanchasFrame extends JFrame {
         }
 
         if (txtId.getText().isEmpty()) {
-            Cancha cancha = new Cancha(nombre, direccion, gps,deporte, estado, imagenes[0], imagenes[1], imagenes[2], imagenes[3]);
-            canchaController.registrarCancha(cancha);
+            Cancha cancha = new Cancha(nombre, direccion, gps, estado);
+            canchaController.registrar(cancha);
             JOptionPane.showMessageDialog(this, "✅ Cancha registrada correctamente");
         } else {
             int id = Integer.parseInt(txtId.getText());
-            Cancha cancha = new Cancha(id, nombre, direccion, gps, deporte, estado,  imagenes[0], imagenes[1], imagenes[2], imagenes[3], null);
-            canchaController.actualizarCancha(cancha);
+            Cancha cancha = new Cancha(id, nombre, direccion, gps,  estado);
+            canchaController.actualizar(cancha);
             JOptionPane.showMessageDialog(this, "✅ Cancha actualizada correctamente");
         }
 
@@ -279,26 +263,14 @@ public class GestionCanchasFrame extends JFrame {
 
     private void cargarFormularioDesdeTabla(int fila) {
         int id = (int) modeloTabla.getValueAt(fila, 0);
-        Cancha cancha = canchaController.buscarCanchaPorId(id);
+        Cancha cancha = canchaController.buscarPorId(id);
         if (cancha != null) {
             txtId.setText(String.valueOf(cancha.getId()));
             txtNombre.setText(cancha.getNombre());
             txtDireccion.setText(cancha.getDireccion());
             txtGps.setText(cancha.getGps());
             comboEstado.setSelectedItem(cancha.getEstado());
-            byte[][] imgs = {cancha.getImagen1(), cancha.getImagen2(), cancha.getImagen3(), cancha.getImagen4()};
-            for (int i = 0; i < imgs.length; i++) {
-                if (imgs[i] != null) {
-                    ImageIcon icon = new ImageIcon(new ImageIcon(imgs[i]).getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
-                    lblImagenes[i].setIcon(icon);
-                    lblImagenes[i].setText("");
-                    imagenes[i] = imgs[i];
-                } else {
-                    lblImagenes[i].setIcon(null);
-                    lblImagenes[i].setText("Imagen " + (i + 1));
-                    imagenes[i] = null;
-                }
-            }
+            
         }
     }
 
@@ -306,7 +278,7 @@ public class GestionCanchasFrame extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas eliminar esta cancha?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             int id = (int) modeloTabla.getValueAt(fila, 0);
-            canchaController.eliminarCancha(id);
+            canchaController.eliminar(id);
             cargarCanchas();
             JOptionPane.showMessageDialog(this, "✅ Cancha eliminada correctamente");
         }
