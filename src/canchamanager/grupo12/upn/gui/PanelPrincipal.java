@@ -66,6 +66,9 @@ public class PanelPrincipal extends JFrame {
         JButton btnCanchas = new JButton("Gestionar Canchas");
         btnCanchas.setFont(new Font("Tahoma", Font.PLAIN, 14));
         
+        JButton btnAsignarDeportes = new JButton("Asignar Deportes");
+        btnAsignarDeportes.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
         JButton btnClientes = new JButton("Gestion de Clientes");
         btnClientes.setFont(new Font("Tahoma", Font.PLAIN, 14));
         
@@ -77,7 +80,8 @@ public class PanelPrincipal extends JFrame {
         btnUsuarios.putClientProperty("JButton.buttonType", "roundRect");
 
         btnReservas.setPreferredSize(new Dimension(220, 40));
-        btnCanchas.setPreferredSize(new Dimension(220, 40));
+        btnCanchas.setPreferredSize(new Dimension(140, 40));
+        btnAsignarDeportes.setPreferredSize(new Dimension(140, 40));
         btnClientes.setPreferredSize(new Dimension(220, 40));
         btnReportes.setPreferredSize(new Dimension(220, 40));
         btnUsuarios.setPreferredSize(new Dimension(220, 40));
@@ -90,10 +94,17 @@ public class PanelPrincipal extends JFrame {
         panelBotones.add(btnReservas, gbc1);
 
         GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.insets = new Insets(15, 15, 15, 15);
+        gbc2.insets = new Insets(15, 0, 15, 115);
         gbc2.gridx = 2;
         gbc2.gridy = 0;
         panelBotones.add(btnCanchas, gbc2);
+        
+        GridBagConstraints gbc3 = new GridBagConstraints();
+        gbc3.insets = new Insets(15, 185, 15, 5);
+        gbc3.gridx = 2;
+        gbc3.gridy = 0;
+        panelBotones.add(btnAsignarDeportes, gbc3);
+        
 
         GridBagConstraints gbcClientes = new GridBagConstraints();
         gbcClientes.insets = new Insets(15, 15, 15, 15);
@@ -152,6 +163,12 @@ public class PanelPrincipal extends JFrame {
         btnReportes.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir ventana de reportes"));
         btnUsuarios.addActionListener(e -> {
             GestionUsuariosFrame ventana = new GestionUsuariosFrame();
+            ventana.setVisible(true);
+        });
+        
+        
+        btnAsignarDeportes.addActionListener(e -> {
+            GestionCanchasDeportesFrame ventana = new GestionCanchasDeportesFrame();
             ventana.setVisible(true);
         });
     }

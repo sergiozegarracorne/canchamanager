@@ -4,8 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.nio.file.Files;
-import java.io.File;
 import java.util.List;
 
 import canchamanager.grupo12.upn.controller.CanchaController;
@@ -15,11 +13,10 @@ public class GestionCanchasFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private JTextField txtId,  txtGps;
+    private JTextField txtId, txtGps;
     private JTextArea txtNombre, txtDireccion;
-    private JComboBox<String> comboEstado, comboDeporte;
+    private JComboBox<String> comboEstado;
     private JLabel[] lblImagenes = new JLabel[4];
-    private byte[][] imagenes = new byte[4][];
     private JTable tablaCanchas;
     private DefaultTableModel modeloTabla;
 
@@ -60,7 +57,7 @@ public class GestionCanchasFrame extends JFrame {
         txtId.setEditable(false);
         txtId.setPreferredSize(new Dimension(280, 25));
 
-     // ✅ Multilinea: nombre
+        // ✅ Multilinea: nombre
         txtNombre = new JTextArea(2, 20);
         txtNombre.setLineWrap(true);
         txtNombre.setWrapStyleWord(true);
@@ -77,15 +74,11 @@ public class GestionCanchasFrame extends JFrame {
 
         comboEstado = new JComboBox<>(new String[]{"DISPONIBLE", "OCUPADA", "MANTENIMIENTO"});
         comboEstado.setPreferredSize(new Dimension(280, 25));
-        
-        comboDeporte = new JComboBox<>(new String[]{"FUTBOL 6", "FUTBOL 8", "FUTBOL 12","VOLLEY","BASQUET"});
-        comboDeporte.setPreferredSize(new Dimension(280, 25));
 
         panelCampos.add(crearFila("ID:", txtId));
         panelCampos.add(crearFilaConScroll("Nombre:*", txtNombre));
         panelCampos.add(crearFilaConScroll("Dirección:*", txtDireccion));
-        panelCampos.add(crearFila("GPS:*", txtGps));        
-        panelCampos.add(crearFilaConCombo("Deporte:", comboDeporte));
+        panelCampos.add(crearFila("GPS:*", txtGps));
         panelCampos.add(crearFilaConCombo("Estado:", comboEstado));
 
         // 🔴 Columna derecha: galería imágenes
@@ -93,7 +86,7 @@ public class GestionCanchasFrame extends JFrame {
         panelImagenes.setBorder(BorderFactory.createTitledBorder("Imágenes (máx. 4)"));
 
         for (int i = 0; i < 4; i++) {
-            lblImagenes[i] = crearLabelImagen("Imagen " + (i + 1), i);
+            lblImagenes[i] = crearLabelImagen("Imagen " + (i + 1));
             panelImagenes.add(lblImagenes[i]);
         }
 
@@ -118,7 +111,7 @@ public class GestionCanchasFrame extends JFrame {
 
         return panel;
     }
-    
+
     private JPanel crearFilaConScroll(String etiqueta, JTextArea area) {
         JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(etiqueta);
@@ -131,7 +124,6 @@ public class GestionCanchasFrame extends JFrame {
         fila.add(scrollPane);
         return fila;
     }
-
 
     private JPanel crearFila(String etiqueta, JTextField campo) {
         JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -153,15 +145,12 @@ public class GestionCanchasFrame extends JFrame {
         return fila;
     }
 
-    private JLabel crearLabelImagen(String texto, int index) {
+    private JLabel crearLabelImagen(String texto) {
         JLabel label = new JLabel(texto, SwingConstants.CENTER);
         label.setPreferredSize(new Dimension(150, 100));
         label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         label.setOpaque(true);
         label.setBackground(Color.LIGHT_GRAY);
-
-   
-
         return label;
     }
 
@@ -215,7 +204,6 @@ public class GestionCanchasFrame extends JFrame {
         String direccion = txtDireccion.getText().trim();
         String gps = txtGps.getText().trim();
         String estado = (String) comboEstado.getSelectedItem();
-        String deporte = (String) comboDeporte.getSelectedItem();
 
         if (nombre.isEmpty() || direccion.isEmpty() || gps.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Completa los campos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -228,7 +216,7 @@ public class GestionCanchasFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "✅ Cancha registrada correctamente");
         } else {
             int id = Integer.parseInt(txtId.getText());
-            Cancha cancha = new Cancha(id, nombre, direccion, gps,  estado);
+            Cancha cancha = new Cancha(id, nombre, direccion, gps, estado);
             canchaController.actualizar(cancha);
             JOptionPane.showMessageDialog(this, "✅ Cancha actualizada correctamente");
         }
@@ -247,7 +235,6 @@ public class GestionCanchasFrame extends JFrame {
         for (int i = 0; i < lblImagenes.length; i++) {
             lblImagenes[i].setIcon(null);
             lblImagenes[i].setText("Imagen " + (i + 1));
-            imagenes[i] = null;
         }
     }
 
@@ -270,7 +257,6 @@ public class GestionCanchasFrame extends JFrame {
             txtDireccion.setText(cancha.getDireccion());
             txtGps.setText(cancha.getGps());
             comboEstado.setSelectedItem(cancha.getEstado());
-            
         }
     }
 
