@@ -18,3 +18,6 @@ target/
 *.tmp
 .DS_Store
 Thumbs.db
+*config.properties
+config.properties
+./config.properties

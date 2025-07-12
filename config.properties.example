@@ -1,8 +1,8 @@
-#Configuración de la app
+#ConfiguraciÃ³n de la app
 #Tue Jul 08 23:22:12 PET 2025
 temaOscuro=true
 default.password=1234.
 
-db.url=jdbc:mysql://jsjfact.com:3306/canchadb
+db.url=jdbc:mysql://localhost:3306/canchadb
 db.user=root
 db.password=1234
