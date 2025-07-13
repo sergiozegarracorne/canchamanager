@@ -10,7 +10,6 @@ import canchamanager.grupo12.upn.controller.CanchaDeporteController;
 import canchamanager.grupo12.upn.controller.HorarioController;
 import canchamanager.grupo12.upn.model.Cancha;
 import canchamanager.grupo12.upn.model.Horario;
-import util.SwingUtil;
 import util.TemaUtil;
 
 public class GestionHorariosFrame extends JFrame {
@@ -30,16 +29,15 @@ public class GestionHorariosFrame extends JFrame {
         "LUNES", "MARTES", "MIERCOLES", "JUEVES",
         "VIERNES", "SABADO", "DOMINGO"
     };
-    
+
     public static void main(String[] args) {
-  		TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
+        TemaUtil.aplicarTemaGuardado(); // aplica claro u oscuro según config
 
-  		EventQueue.invokeLater(() -> {
-  			GestionHorariosFrame frame = new GestionHorariosFrame();
-  			frame.setVisible(true);
-  		});
-
-  	}
+        EventQueue.invokeLater(() -> {
+            GestionHorariosFrame frame = new GestionHorariosFrame();
+            frame.setVisible(true);
+        });
+    }
 
     public GestionHorariosFrame() {
         setTitle("Gestión de Horarios y Precios");
@@ -67,7 +65,7 @@ public class GestionHorariosFrame extends JFrame {
 
         // 🟣 Tabla horarios
         modeloTabla = new DefaultTableModel(new String[]{
-                "Día", "Hora Inicio", "Disponible", "Variación (%)"
+            "Día", "Hora Inicio", "Disponible", "Variación (%)"
         }, 0) {
             private static final long serialVersionUID = 1L;
 
@@ -102,35 +100,26 @@ public class GestionHorariosFrame extends JFrame {
 
         setContentPane(panelPrincipal);
 
-        // 🔥 Cargar canchas en segundo plano
-        SwingUtil.ejecutarConLoading(
-            panelPrincipal,
-            this::cargarCanchas,
-            () -> {},
-            "⏳ Cargando canchas..."
-        );
+        // 🔥 Cargar canchas directamente
+        cargarCanchas();
     }
 
     private void cargarCanchas() {
         List<Cancha> canchas = canchaController.listarCanchas();
-        SwingUtilities.invokeLater(() -> {
-            comboCanchas.removeAllItems();
-            for (Cancha c : canchas) {
-                comboCanchas.addItem(c);
-            }
-        });
+        comboCanchas.removeAllItems();
+        for (Cancha c : canchas) {
+            comboCanchas.addItem(c);
+        }
     }
 
     private void cargarDeportes() {
         Cancha canchaSeleccionada = (Cancha) comboCanchas.getSelectedItem();
         if (canchaSeleccionada != null) {
             List<String> deportes = canchaDeporteController.listarNombresDeportesPorCancha(canchaSeleccionada.getId());
-            SwingUtilities.invokeLater(() -> {
-                comboDeportes.removeAllItems();
-                for (String d : deportes) {
-                    comboDeportes.addItem(d);
-                }
-            });
+            comboDeportes.removeAllItems();
+            for (String d : deportes) {
+                comboDeportes.addItem(d);
+            }
         }
     }
 
@@ -141,34 +130,37 @@ public class GestionHorariosFrame extends JFrame {
         String deporteSeleccionado = (String) comboDeportes.getSelectedItem();
 
         if (canchaSeleccionada != null && deporteSeleccionado != null) {
-        	int canchaDeporteId = canchaDeporteController.obtenerCanchaDeporteIdPorNombre(
-        		    canchaSeleccionada.getId(), deporteSeleccionado
-        		);
+            int canchaDeporteId = canchaDeporteController.obtenerCanchaDeporteIdPorNombre(
+                canchaSeleccionada.getId(), deporteSeleccionado
+            );
 
             List<Horario> horarios = horarioController.listarPorCanchaDeporte(canchaDeporteId);
 
             for (String dia : DIAS_SEMANA) {
-                // Buscar si ya hay horario en DB
-                Horario encontrado = horarios.stream()
-                        .filter(h -> h.getDiaSemana().equalsIgnoreCase(dia))
-                        .findFirst()
-                        .orElse(null);
+            	List<Horario> horariosDelDia = horarios.stream()
+            		    .filter(h -> h.getDiaSemana().equalsIgnoreCase(dia))
+            		    .toList();
 
-                if (encontrado != null) {
-                    modeloTabla.addRow(new Object[]{
-                        dia,
-                        encontrado.getHoraInicio(),
-                        true,
-                        encontrado.getPorcentaje()
-                    });
-                } else {
-                    modeloTabla.addRow(new Object[]{
-                        dia,
-                        "08:00",
-                        false,
-                        0.0
-                    });
-                }
+            		if (!horariosDelDia.isEmpty()) {
+            		    // Agregar cada horario encontrado
+            		    for (Horario h : horariosDelDia) {
+            		        modeloTabla.addRow(new Object[]{
+            		            dia,
+            		            h.getHoraInicio(),
+            		            true,
+            		            h.getPorcentaje()
+            		        });
+            		    }
+            		} else {
+            		    // Agregar un registro vacío si no hay horarios en ese día
+            		    modeloTabla.addRow(new Object[]{
+            		        dia,
+            		        "08:00",
+            		        false,
+            		        0.0
+            		    });
+            		}
+
             }
         }
     }
@@ -178,8 +170,9 @@ public class GestionHorariosFrame extends JFrame {
         String deporteSeleccionado = (String) comboDeportes.getSelectedItem();
 
         if (canchaSeleccionada != null && deporteSeleccionado != null) {
-            int canchaDeporteId =   canchaDeporteController.obtenerCanchaDeporteIdPorNombre(canchaSeleccionada.getId(), deporteSeleccionado);
-
+            int canchaDeporteId = canchaDeporteController.obtenerCanchaDeporteIdPorNombre(
+                canchaSeleccionada.getId(), deporteSeleccionado
+            );
 
             // Eliminar horarios existentes antes de registrar nuevos
             horarioController.eliminarPorCanchaDeporte(canchaDeporteId);
