@@ -38,8 +38,8 @@ public class GestorCanchasDeportesMySQL implements IGestorCanchasDeportes {
     }
 
     @Override
-    public List<Integer> listarDeportesPorCancha(int canchaId) {
-        List<Integer> lista = new ArrayList<>();
+    public java.util.List<Integer> listarDeportesPorCancha(int canchaId) {
+        java.util.List<Integer> lista = new java.util.ArrayList<>();
         String sql = "SELECT deporte_id FROM canchas_deportes WHERE cancha_id=?";
         try (Connection conn = ConexionDB.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -53,4 +53,47 @@ public class GestorCanchasDeportesMySQL implements IGestorCanchasDeportes {
         }
         return lista;
     }
+
+    @Override
+    public int obtenerCanchaDeporteId(int canchaId, int deporteId) {
+        String sql = "SELECT id FROM canchas_deportes WHERE cancha_id=? AND deporte_id=?";
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, canchaId);
+            ps.setInt(2, deporteId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // ❌ No encontrado
+    }
+    
+    
+    
+    @Override
+    public List<String> listarNombresDeportesPorCancha(int canchaId) {
+        List<String> lista = new ArrayList<>();
+        String sql = """
+            SELECT d.nombre 
+            FROM canchas_deportes cd
+            JOIN deportes d ON cd.deporte_id = d.id
+            WHERE cd.cancha_id = ?
+        """;
+
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, canchaId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                lista.add(rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 }

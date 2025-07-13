@@ -21,4 +21,21 @@ public class GestorDeportesMySQL implements IGestorDeportes {
         }
         return lista;
     }
+    
+    public int obtenerIdPorNombre(String nombre) {
+        String sql = "SELECT id FROM deportes WHERE nombre=?";
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // ❌ No encontrado
+    }
+    
+    
 }

@@ -3,10 +3,7 @@ package canchamanager.grupo12.upn.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import canchamanager.grupo12.upn.controller.ClienteController;
-import canchamanager.grupo12.upn.dao.GestorClientesMySQL;
-import canchamanager.grupo12.upn.dao.IGestorClientes;
 import canchamanager.grupo12.upn.model.Cliente;
 
 import java.awt.*;
@@ -45,8 +42,8 @@ public class GestionClientesFrame extends JFrame {
 
 		// Botones guardar y limpiar
 		JPanel panelBotones = new JPanel();
-		JButton btnGuardar = new JButton("💾 Guardar");
-		JButton btnLimpiar = new JButton("🧹 Limpiar");
+		JButton btnGuardar = new JButton("Guardar");
+		JButton btnLimpiar = new JButton("Limpiar");
 
 		btnGuardar.addActionListener(e -> guardarCliente());
 		btnLimpiar.addActionListener(e -> limpiarFormulario());
@@ -129,42 +126,7 @@ public class GestionClientesFrame extends JFrame {
 		return fila;
 	}
 
-	/*
-	 * 
-	 * private void guardarCliente() { String id = txtId.getText().trim(); String
-	 * nombre = txtNombre.getText(); String telefono = txtTelefono.getText(); String
-	 * email = txtEmail.getText(); String dni = txtDni.getText(); boolean frecuente
-	 * = chkFrecuente.isSelected();
-	 * 
-	 * if (nombre.isEmpty() || telefono.isEmpty() || dni.isEmpty()) {
-	 * JOptionPane.showMessageDialog(this, "Completa los campos obligatorios",
-	 * "Error", JOptionPane.ERROR_MESSAGE); return; }
-	 * 
-	 * if (id == null || id.isEmpty()) {
-	 * 
-	 * Cliente existente = gestorClientes.buscarClientePorDni(dni);
-	 * 
-	 * if (existente != null) { JOptionPane.showMessageDialog(this,
-	 * "Ya existe un cliente con este DNI: " + existente.getNombre(), "Error",
-	 * JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new Cliente(nombre,
-	 * telefono, email, dni, frecuente); gestorClientes.registrarCliente(cliente);
-	 * JOptionPane.showMessageDialog(this, "✅ Cliente registrado correctamente");
-	 * limpiarFormulario(); }
-	 * 
-	 * } else {
-	 * 
-	 * Cliente existente = gestorClientes.buscarClientePorDni(dni); if (existente !=
-	 * null && existente.getId() != Integer.parseInt(id)) {
-	 * JOptionPane.showMessageDialog(this,
-	 * "El DNI ingresado pertenece a otro cliente: " + existente.getNombre(),
-	 * "Error", JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new
-	 * Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
-	 * gestorClientes.actualizarCliente(cliente);
-	 * JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
-	 * limpiarFormulario(); }; }
-	 * 
-	 * cargarClientes(); }
-	 */
+	
 
 	private void guardarCliente() {
 		String id = txtId.getText().trim();
@@ -183,20 +145,20 @@ public class GestionClientesFrame extends JFrame {
 			// 🔥 Usar el controller para registrar
 			Cliente cliente = new Cliente(nombre, telefono, email, dni, frecuente);
 			if (clienteController.registrarCliente(cliente)) {
-				JOptionPane.showMessageDialog(this, "✅ Cliente registrado correctamente");
+				JOptionPane.showMessageDialog(this, "Cliente registrado correctamente");
 				limpiarFormulario();
 			} else {
-				JOptionPane.showMessageDialog(this, "❌ Ya existe un cliente con este DNI", "Error",
+				JOptionPane.showMessageDialog(this, "Ya existe un cliente con este DNI", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			// 🔥 Usar el controller para actualizar
 			Cliente cliente = new Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
 			if (clienteController.actualizarCliente(cliente)) {
-				JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
+				JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente");
 				limpiarFormulario();
 			} else {
-				JOptionPane.showMessageDialog(this, "❌ El DNI pertenece a otro cliente", "Error",
+				JOptionPane.showMessageDialog(this, "El DNI pertenece a otro cliente", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
