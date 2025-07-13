@@ -8,7 +8,7 @@ import java.util.List;
 
 import canchamanager.grupo12.upn.controller.CanchaController;
 import canchamanager.grupo12.upn.model.Cancha;
-import util.SwingUtil; // ✅ Importa el helper
+import util.SwingUtil; // 
 
 public class GestionCanchasFrame extends JFrame {
 

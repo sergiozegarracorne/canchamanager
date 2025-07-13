@@ -5,13 +5,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import canchamanager.grupo12.upn.controller.ClienteController;
-import canchamanager.grupo12.upn.dao.GestorClientesMySQL;
-import canchamanager.grupo12.upn.dao.IGestorClientes;
 import canchamanager.grupo12.upn.model.Cliente;
+import util.SwingUtil;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import util.SwingUtil;
 
 public class GestionClientesFrame extends JFrame {
 
@@ -20,20 +20,62 @@ public class GestionClientesFrame extends JFrame {
 	private JCheckBox chkFrecuente;
 	private JTable tablaClientes;
 	private DefaultTableModel modeloTabla;
-
+	private JPanel panelPrincipal;
 	private ClienteController clienteController = new ClienteController();
+
+	   private void simularCargaDatos() {
+	        // 🔥 Aquí puedes hacer una carga real si quieres (consultas a DB)
+	        try {
+	            Thread.sleep(500); // Simulación de espera para bases remotas
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	public GestionClientesFrame() {
 		setTitle("Gestión de Clientes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
-		getContentPane().setLayout(new BorderLayout());
 
-		// Panel superior (formulario)
-		JPanel panelFormulario = new JPanel();
-		panelFormulario.setBorder(BorderFactory.createTitledBorder("Registrar / Editar Cliente"));
-		panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
+		 panelPrincipal = new JPanel(new BorderLayout());
+	        getContentPane().add(panelPrincipal);
+
+	        // ✅ Mostrar mensaje de carga mientras trae datos
+	        SwingUtil.ejecutarConLoading(
+	                panelPrincipal,
+	                this::simularCargaDatos,     // 🔴 Tarea pesada (consulta DB)
+	                this::inicializarComponentes, // 🟢 Mostrar GUI cuando termine
+	                "⏳ Cargando datos de clientes..."
+	        );	
+	}
+	
+	 private void inicializarComponentes() {
+	        panelPrincipal.removeAll(); // ✅ Limpiar el mensaje de carga
+
+	        JTabbedPane tabbedPane = new JTabbedPane();
+
+	        // 🟢 Tab 1: Formulario
+	        JPanel panelFormulario = crearPanelFormulario();
+	        tabbedPane.addTab("Registrar / Editar Cancha", panelFormulario);
+
+	        // 🟣 Tab 2: Lista de canchas
+	        JPanel panelLista = crearPanelFormulario();
+	        tabbedPane.addTab("Lista de Canchas", panelLista);
+
+	        panelPrincipal.add(tabbedPane, BorderLayout.CENTER);
+	        panelPrincipal.revalidate();
+	        panelPrincipal.repaint();
+	    }
+
+	
+		 private JPanel crearPanelFormulario() {
+
+		        panelPrincipal.removeAll(); // ✅ Limpiar el mensaje de carga
+
+		        JPanel panelFormulario = new JPanel();
+		        panelFormulario.setBorder(BorderFactory.createTitledBorder("Registrar / Editar Cliente"));
+		        panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
 
 		// Campos del formulario
 		panelFormulario.add(crearFila("ID:", txtId = new JTextField(10)));
@@ -115,6 +157,8 @@ public class GestionClientesFrame extends JFrame {
 		});
 
 		SwingUtilities.invokeLater(() -> txtDni.requestFocusInWindow());
+		
+		return panelFormulario;
 	}
 
 	private JPanel crearFila(String etiqueta, JComponent campo) {
@@ -128,43 +172,6 @@ public class GestionClientesFrame extends JFrame {
 		fila.add(campo);
 		return fila;
 	}
-
-	/*
-	 * 
-	 * private void guardarCliente() { String id = txtId.getText().trim(); String
-	 * nombre = txtNombre.getText(); String telefono = txtTelefono.getText(); String
-	 * email = txtEmail.getText(); String dni = txtDni.getText(); boolean frecuente
-	 * = chkFrecuente.isSelected();
-	 * 
-	 * if (nombre.isEmpty() || telefono.isEmpty() || dni.isEmpty()) {
-	 * JOptionPane.showMessageDialog(this, "Completa los campos obligatorios",
-	 * "Error", JOptionPane.ERROR_MESSAGE); return; }
-	 * 
-	 * if (id == null || id.isEmpty()) {
-	 * 
-	 * Cliente existente = gestorClientes.buscarClientePorDni(dni);
-	 * 
-	 * if (existente != null) { JOptionPane.showMessageDialog(this,
-	 * "Ya existe un cliente con este DNI: " + existente.getNombre(), "Error",
-	 * JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new Cliente(nombre,
-	 * telefono, email, dni, frecuente); gestorClientes.registrarCliente(cliente);
-	 * JOptionPane.showMessageDialog(this, "✅ Cliente registrado correctamente");
-	 * limpiarFormulario(); }
-	 * 
-	 * } else {
-	 * 
-	 * Cliente existente = gestorClientes.buscarClientePorDni(dni); if (existente !=
-	 * null && existente.getId() != Integer.parseInt(id)) {
-	 * JOptionPane.showMessageDialog(this,
-	 * "El DNI ingresado pertenece a otro cliente: " + existente.getNombre(),
-	 * "Error", JOptionPane.ERROR_MESSAGE); } else { Cliente cliente = new
-	 * Cliente(Integer.parseInt(id), nombre, telefono, email, dni, frecuente);
-	 * gestorClientes.actualizarCliente(cliente);
-	 * JOptionPane.showMessageDialog(this, "✅ Cliente actualizado correctamente");
-	 * limpiarFormulario(); }; }
-	 * 
-	 * cargarClientes(); }
-	 */
 
 	private void guardarCliente() {
 		String id = txtId.getText().trim();
