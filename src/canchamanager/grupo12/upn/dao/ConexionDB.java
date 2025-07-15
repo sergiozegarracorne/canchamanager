@@ -17,10 +17,12 @@ public class ConexionDB {
 
     public static Connection getConexion() {
         try {
+            if ((USER == null || USER.isBlank()) && URL.startsWith("jdbc:sqlite")) {
+                Class.forName("org.sqlite.JDBC");
+                return DriverManager.getConnection(URL);
+            }
             return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            //System.err.println("Error al conectar con la base de datos");
-            //e.printStackTrace(); 
+        } catch (Exception e) {
             return null;
         }
     }

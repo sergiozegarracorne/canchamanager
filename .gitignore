@@ -21,3 +21,5 @@ Thumbs.db
 *config.properties
 config.properties
 ./config.properties
+sources.txt
+lib/sqlite-jdbc.jar

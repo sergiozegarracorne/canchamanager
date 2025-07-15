@@ -98,7 +98,21 @@ src/
 └── util/
 
     ├── TemaUtil.java
-    
-    ├── ConexionMonitor.java    
-    
+
+    ├── ConexionMonitor.java
+
     └── ConfigUtil.java
+
+## Pruebas con SQLite
+
+Si deseas probar la aplicación sin MySQL, puedes usar una base de datos
+SQLite. Descarga el driver `sqlite-jdbc.jar` (por ejemplo desde
+[https://github.com/xerial/sqlite-jdbc/](https://github.com/xerial/sqlite-jdbc/))
+y colócalo en el directorio `lib`. Después, descomenta las líneas
+correspondientes en `config.properties`:
+
+```
+# db.url=jdbc:sqlite:./canchadb.sqlite
+# db.user=
+# db.password=
+```
