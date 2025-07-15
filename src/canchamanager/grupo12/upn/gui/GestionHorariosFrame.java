@@ -3,6 +3,8 @@ package canchamanager.grupo12.upn.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import canchamanager.grupo12.upn.controller.CanchaController;
@@ -28,6 +30,12 @@ public class GestionHorariosFrame extends JFrame {
     private static final String[] DIAS_SEMANA = {
         "LUNES", "MARTES", "MIERCOLES", "JUEVES",
         "VIERNES", "SABADO", "DOMINGO"
+    };
+
+    private static final String[] HORAS_BASE = {
+        "08:00", "09:00", "10:00", "11:00", "12:00", "13:00",
+        "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
+        "20:00", "21:00", "22:00"
     };
 
     public static void main(String[] args) {
@@ -137,32 +145,35 @@ public class GestionHorariosFrame extends JFrame {
             List<Horario> horarios = horarioController.listarPorCanchaDeporte(canchaDeporteId);
 
             for (String dia : DIAS_SEMANA) {
-            	List<Horario> horariosDelDia = horarios.stream()
-            		    .filter(h -> h.getDiaSemana().equalsIgnoreCase(dia))
-            		    .toList();
+                for (String hora : HORAS_BASE) {
+                    Horario encontrado = horarios.stream()
+                        .filter(h -> h.getDiaSemana().equalsIgnoreCase(dia) && h.getHoraInicio().startsWith(hora))
+                        .findFirst()
+                        .orElse(null);
 
-            		if (!horariosDelDia.isEmpty()) {
-            		    // Agregar cada horario encontrado
-            		    for (Horario h : horariosDelDia) {
-            		        modeloTabla.addRow(new Object[]{
-            		            dia,
-            		            h.getHoraInicio(),
-            		            true,
-            		            h.getPorcentaje()
-            		        });
-            		    }
-            		} else {
-            		    // Agregar un registro vacío si no hay horarios en ese día
-            		    modeloTabla.addRow(new Object[]{
-            		        dia,
-            		        "08:00",
-            		        false,
-            		        0.0
-            		    });
-            		}
-
+                    if (encontrado != null) {
+                        modeloTabla.addRow(new Object[]{
+                            dia,
+                            hora + " - " + sumarHora(hora),
+                            true,
+                            encontrado.getPorcentaje()
+                        });
+                    } else {
+                        modeloTabla.addRow(new Object[]{
+                            dia,
+                            hora + " - " + sumarHora(hora),
+                            false,
+                            0.0
+                        });
+                    }
+                }
             }
         }
+    }
+
+    private String sumarHora(String hora) {
+        LocalTime t = LocalTime.parse(hora, DateTimeFormatter.ofPattern("HH:mm"));
+        return t.plusHours(1).format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     private void guardarHorarios() {
@@ -179,7 +190,8 @@ public class GestionHorariosFrame extends JFrame {
 
             for (int i = 0; i < modeloTabla.getRowCount(); i++) {
                 String dia = modeloTabla.getValueAt(i, 0).toString();
-                String hora = modeloTabla.getValueAt(i, 1).toString();
+                String intervalo = modeloTabla.getValueAt(i, 1).toString();
+                String hora = intervalo.split(" - ")[0];
                 boolean disponible = (boolean) modeloTabla.getValueAt(i, 2);
                 double porcentaje = Double.parseDouble(modeloTabla.getValueAt(i, 3).toString());
 
